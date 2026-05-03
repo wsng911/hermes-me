@@ -1,0 +1,22 @@
+services:
+  hermes:
+    image: wsng911/hermes-agent:latest
+    container_name: hermes-agent
+    user: root
+    volumes:
+      - /home/Hermes-agent:/opt/data
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    cpus: "1.0"
+    mem_limit: 6g
+    memswap_limit: 6g
+    pids_limit: 200
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"

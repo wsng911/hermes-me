@@ -1,0 +1,93 @@
+# ============================================================
+# Hermes Agent 配置文件
+# ============================================================
+
+# 模型配置
+model:
+  default: "anthropic/claude-opus-4.6"  # 默认模型，可改为其他模型
+  provider: "auto"                        # 自动检测提供商
+  base_url: "https://openrouter.ai/api/v1"
+
+# 终端后端（容器内用 local 即可）
+terminal:
+  backend: "local"
+  cwd: "."
+  timeout: 180
+  lifetime_seconds: 300
+
+# Agent 行为
+agent:
+  max_turns: 60        # 每次对话最大工具调用轮数
+  verbose: false       # 是否显示详细日志
+  reasoning_effort: "medium"  # 思考深度: xhigh/high/medium/low/none
+
+# 记忆系统
+memory:
+  memory_enabled: true       # 开启 Agent 笔记记忆
+  user_profile_enabled: true # 开启用户画像记忆
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  nudge_interval: 10         # 每10轮提醒保存记忆
+
+# 上下文压缩（对话过长时自动压缩）
+compression:
+  enabled: true
+  threshold: 0.50   # 达到上下文50%时触发压缩
+  target_ratio: 0.20
+  protect_last_n: 20
+
+# 消息平台会话重置策略
+session_reset:
+  mode: both          # both/idle/daily/none
+  idle_minutes: 1440  # 24小时无活动后重置
+  at_hour: 4          # 每天凌晨4点重置
+
+# 技能系统
+skills:
+  creation_nudge_interval: 15  # 每15轮提醒创建技能
+
+# 各平台工具集
+platform_toolsets:
+  cli: [hermes-cli]
+  telegram: [hermes-telegram]
+  discord: [hermes-discord]
+  whatsapp: [hermes-whatsapp]
+  slack: [hermes-slack]
+
+# 显示设置
+display:
+  compact: false
+  tool_progress: all   # off/new/all/verbose
+  streaming: true
+  show_reasoning: false
+  skin: default        # default/ares/mono/slate
+
+# 语音转文字
+stt:
+  enabled: true
+  local:
+    model: "base"  # tiny/base/small/medium/large-v3
+
+# 代码执行沙箱
+code_execution:
+  timeout: 300
+  max_tool_calls: 50
+
+# 子 Agent 委托
+delegation:
+  max_iterations: 50
+
+# 自主 Curator（v0.12.0 新增）
+# 后台自动整理/修剪技能库，7天一个周期
+# auxiliary:
+#   curator:
+#     model: ""   # 留空使用默认模型
+
+# 技能守护（v0.12.0 新增）
+skills:
+  creation_nudge_interval: 15
+  guard_agent_created: false  # 是否保护 Agent 自动创建的技能不被 Curator 修改
+
+# 密文脱敏（v0.12.0 默认关闭，避免误伤工具输出）
+# redaction:
+#   enabled: false
